@@ -1,6 +1,7 @@
 package com.ec.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "cartitem")
@@ -55,4 +56,6 @@ public class CartItemEntity {
     public void setPrice(String price) {
         this.price = price;
     }
+
+
 }

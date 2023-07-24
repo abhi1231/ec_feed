@@ -1,4 +1,9 @@
 package com.ec.dao;
 
-public interface ProductDao {
+import com.ec.entity.ProductEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProductDao extends JpaRepository<ProductEntity,Long> {
 }

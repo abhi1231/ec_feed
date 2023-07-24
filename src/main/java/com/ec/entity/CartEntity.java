@@ -3,7 +3,7 @@ package com.ec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "carts")
 public class CartEntity {
 
     @Id
@@ -28,5 +28,8 @@ public class CartEntity {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public CartEntity() {
     }
 }
