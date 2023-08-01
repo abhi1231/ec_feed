@@ -19,7 +19,10 @@ public class ProductEntity {
     private String name;
     private String description;
     private double price;
-    private String imageUrl;
+
+    @Lob
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
@@ -72,13 +75,15 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
+
+
 
     public Date getCreatedAt() {
         return createdAt;
@@ -104,5 +109,8 @@ public class ProductEntity {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Date();
+    }
+
+    public ProductEntity() {
     }
 }
