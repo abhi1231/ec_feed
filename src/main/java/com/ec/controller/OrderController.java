@@ -3,7 +3,6 @@ package com.ec.controller;
 import com.ec.dto.OrderRequestDTO;
 import com.ec.entity.OrderEntity;
 import com.ec.service.Order.OrderServiceImpl;
-import com.ec.service.prize.PrizeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +18,6 @@ public class OrderController {
 
 
 
-    @Autowired
-    private PrizeImpl prize;
 
     @Autowired
     private OrderServiceImpl orderServiceImpl;
