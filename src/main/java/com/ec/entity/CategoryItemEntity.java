@@ -9,17 +9,29 @@ public class CategoryItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    private String category_id;
+    private Long categoryId;
 
     private String name;
     private String description;
 
-    public String getCategory_id() {
-        return category_id;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product1 product;
+
+    public Product1 getProduct() {
+        return product;
     }
 
-    public void setCategory_id(String category_id) {
-        this.category_id = category_id;
+    public void setProduct(Product1 product) {
+        this.product = product;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -36,5 +48,8 @@ public class CategoryItemEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public CategoryItemEntity() {
     }
 }

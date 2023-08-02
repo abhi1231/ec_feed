@@ -8,29 +8,43 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-@AllArgsConstructor
 public class CustomerServiceImpln implements CustomerService {
 
     @Autowired
     private CustomerDao customerDao;
 
     @Override
-    public List<Customer> queryCustomer() {
+    public List<Customer> getAllCustomers() {
         return customerDao.findAll();
     }
 
-    @Override
-    public List<Customer> queryCustomerByName(String firstName) {
+    public Customer getCustomerById(Long id) {
+        return customerDao.findById(id).orElse(null);
+    }
+
+    public Customer createCustomer(Customer customer) {
+        return customerDao.save(customer);
+    }
+
+    public Customer updateCustomer(Long id, Customer updatedCustomer) {
+        Customer existingCustomer = customerDao.findById(id).orElse(null);
+        if (existingCustomer != null) {
+            existingCustomer.setFirstname(updatedCustomer.getFirstname());
+            existingCustomer.setLastname(updatedCustomer.getLastname());
+            existingCustomer.setGender(updatedCustomer.getGender());
+            existingCustomer.setPhoneno(updatedCustomer.getPhoneno());
+            existingCustomer.setAddress(updatedCustomer.getAddress());
+            existingCustomer.setCity(updatedCustomer.getCity());
+            existingCustomer.setState(updatedCustomer.getState());
+            existingCustomer.setCountry(updatedCustomer.getCountry());
+            existingCustomer.setZip(updatedCustomer.getZip());
+            return customerDao.save(existingCustomer);
+        }
         return null;
     }
 
-    @Override
-    public int insertCustomer(Customer customer) {
-        return 0;
-    }
-
-    @Override
-    public int queryCountCustomer() {
-        return 0;
+    public void deleteCustomer(Long id) {
+        customerDao.deleteById(id);
     }
 }
+

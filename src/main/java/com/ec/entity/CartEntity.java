@@ -5,14 +5,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "carts")
 public class CartEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
     private Long cartId;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     public Long getCartId() {
         return cartId;
@@ -22,14 +22,12 @@ public class CartEntity {
         this.cartId = cartId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
-    public CartEntity() {
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
+

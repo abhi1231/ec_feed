@@ -1,29 +1,52 @@
 package com.ec.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "payment")
 public class PaymentEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payment_id;
+    @Column(name = "payment_id")
+    private Long paymentId;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
+
+    @Column(name = "payment_date")
+    private LocalDate paymentDate;
+
+    @Column(name = "payment_method")
     private String paymentMethod;
+
     private double amount;
 
-//    private String paymentStatus;
-
-    // Constructors, getters, and setters
-    // ...
-
-    public Long getPayment_id() {
-        return payment_id;
+    public Long getPaymentId() {
+        return paymentId;
     }
 
-    public void setPayment_id(Long payment_id) {
-        this.payment_id = payment_id;
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public OrderEntity getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderEntity order) {
+        this.order = order;
+    }
+
+    public LocalDate getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDate paymentDate) {
+        this.paymentDate = paymentDate;
     }
 
     public String getPaymentMethod() {
@@ -41,12 +64,4 @@ public class PaymentEntity {
     public void setAmount(double amount) {
         this.amount = amount;
     }
-
-//    public String getPaymentStatus() {
-//        return paymentStatus;
-//    }
-
-//    public void setPaymentStatus(String paymentStatus) {
-//        this.paymentStatus = paymentStatus;
-//    }
 }

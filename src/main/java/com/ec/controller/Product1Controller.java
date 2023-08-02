@@ -1,6 +1,9 @@
 package com.ec.controller;
 
 
+import com.ec.dao.CartDao;
+import com.ec.dao.CategoryItem;
+import com.ec.dao.ProductDao;
 import com.ec.entity.Product1;
 import com.ec.service.product1.Product1ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,61 +13,35 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
-import java.util.Date;
+
 import java.util.List;
 
 @RestController
-@RequestMapping(value ="/api/product1")
+@RequestMapping(value = "/api/product1")
 public class Product1Controller {
 
     @Autowired
     private Product1ServiceImpl product1ServiceImpl;
+    @Autowired
+    private CategoryItem categoryItem;
 
+    @Autowired
+    private CartDao cartDao;
+    @Autowired
+    private ProductDao productDao;
 
-    @PostMapping
-    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
-        String uploadImage = product1ServiceImpl.uploadImage(file);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(uploadImage);
-    }
-    @PostMapping("/uploadImage")
-    public ResponseEntity<String> uploadImageAndData(
-            @RequestParam("image") MultipartFile file,
-            @RequestParam("name") String name,
-            @RequestParam("price") String price,
-            @RequestParam("description") String description
-    ) throws IOException {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Image file is required.");
-        }
-
-        byte[] imageData = file.getBytes();
-        Product1 product = new Product1();
-        product.setName(name);
-        product.setImage(imageData);
-        product.setPrice(price);
-        product.setDescription(description);
-        product1ServiceImpl.saveProduct(product);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Image and data uploaded successfully.");
-    }
 
     @PutMapping
     public ResponseEntity<String> uploadImageAndData(
-            @RequestParam(value = "productId", required = false,defaultValue = "-1") int productId,
+            @RequestParam(value = "productId", required = false, defaultValue = "-1") int productId,
             @RequestParam("image") MultipartFile file,
             @RequestParam("name") String name,
-            @RequestParam("price") String price,
+            @RequestParam("price") double price,
             @RequestParam("description") String description
     ) throws IOException {
         if (productId != -1) {
-            // ProductId is provided, so we want to update the existing product
             Product1 existingProduct = product1ServiceImpl.getProductById(productId);
             if (existingProduct == null) {
                 return ResponseEntity.notFound().build();
@@ -80,7 +57,7 @@ public class Product1Controller {
             existingProduct.setDescription(description);
             product1ServiceImpl.saveProduct(existingProduct);
         } else {
-            // ProductId is not provided, so we want to create a new product
+
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Image file is required.");
             }
@@ -105,10 +82,48 @@ public class Product1Controller {
 
         return ResponseEntity.ok(productList);
     }
+
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable int productId) {
         Product1 existingProduct = product1ServiceImpl.getProductById(productId);
         product1ServiceImpl.deleteProduct(existingProduct);
         return ResponseEntity.ok("Product deleted successfully.");
     }
+
+    //    @PostMapping
+//    public ResponseEntity<Product1> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
+//        try {
+//            Product1 savedProduct = product1ServiceImpl.createProduct(productRequestDTO);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
+    @PostMapping("/addNewProduct")
+    public ResponseEntity<String> uploadImageAndData(
+            @RequestParam("image") MultipartFile file,
+            @RequestParam("name") String name,
+            @RequestParam("price") double price,
+            @RequestParam("description") String description
+            //  @RequestParam("cartId") long cartId,
+            // @RequestParam("categoryId") long categoryId
+            //  @RequestParam("data") ProductRequestDTO productRequestDTO
+    ) throws IOException {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Image file is required.");
+        }
+
+        byte[] imageData = file.getBytes();
+        Product1 product = new Product1();
+        product.setName(name);
+        product.setImage(imageData);
+        product.setPrice(price);
+        product.setDescription(description);
+        product.setImage(imageData);
+        productDao.save(product);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Image and data uploaded successfully.");
+    }
 }
+

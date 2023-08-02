@@ -1,12 +1,15 @@
 package com.ec.controller;
 
+import com.ec.dto.PaymentRequestDTO;
 import com.ec.entity.PaymentEntity;
 import com.ec.service.Payment.PaymentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -18,45 +21,55 @@ public class PaymentController {
     private PaymentServiceImpl paymentServiceImpl;
 
 
-    @GetMapping
-    public ResponseEntity<List<PaymentEntity>> getAllPayments() {
-        List<PaymentEntity> payments = paymentServiceImpl.getAllPayments();
-        return ResponseEntity.ok().body(payments);
-    }
 
-//    @GetMapping
-//    public List<PaymentEntity> getAllCarts() {
-//        return paymentServiceImpl.getAllPayments();
-//    }
-    @GetMapping("/{paymentId}")
-    public ResponseEntity<Optional<PaymentEntity>> getPaymentById(@PathVariable("paymentId") Long paymentId) {
-        Optional<PaymentEntity> payment = paymentServiceImpl.getPaymentById(paymentId);
-        if (payment != null) {
-            return ResponseEntity.ok().body(payment);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PostMapping
+    public ResponseEntity<PaymentEntity> createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO) {
+        try {
+            PaymentEntity savedPayment = paymentServiceImpl.createPayment(paymentRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedPayment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
-    @PostMapping
-    public ResponseEntity<PaymentEntity> createPayment(@RequestBody PaymentEntity payment) {
-        PaymentEntity createdPayment = paymentServiceImpl.createPayment(payment);
-        return ResponseEntity.ok().body(createdPayment);
-    }
-
     @PutMapping("/{paymentId}")
-    public ResponseEntity<PaymentEntity> updatePayment(@PathVariable("paymentId") Long paymentId, @RequestBody PaymentEntity payment) {
-        PaymentEntity updatedPayment = paymentServiceImpl.updatePayment(paymentId, payment);
-        if (updatedPayment != null) {
-            return ResponseEntity.ok().body(updatedPayment);
-        } else {
+    public ResponseEntity<PaymentEntity> updatePayment(
+            @PathVariable Long paymentId,
+            @RequestBody PaymentRequestDTO paymentRequestDTO
+    ) {
+        try {
+            PaymentEntity updatedPayment = paymentServiceImpl.updatePayment(paymentId, paymentRequestDTO);
+            return ResponseEntity.ok(updatedPayment);
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping("/{paymentId}")
-    public void deletePayment(@PathVariable("paymentId") Long paymentId) {
-        paymentServiceImpl.deletePayment(paymentId);
+    public ResponseEntity<Void> deletePayment(@PathVariable Long paymentId) {
+        try {
+            paymentServiceImpl.deletePayment(paymentId);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
         }
+    }
 
+    @GetMapping
+    public ResponseEntity<List<PaymentEntity>> getAllPayments() {
+        List<PaymentEntity> payments = paymentServiceImpl.getAllPayments();
+        return ResponseEntity.ok(payments);
+    }
+
+    @GetMapping("/{paymentId}")
+    public ResponseEntity<PaymentEntity> getPaymentById(@PathVariable Long paymentId) {
+        try {
+            PaymentEntity payment = paymentServiceImpl.getPaymentById(paymentId);
+            return ResponseEntity.ok(payment);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
