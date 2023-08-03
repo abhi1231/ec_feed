@@ -5,10 +5,12 @@ import com.ec.dao.CartDao;
 import com.ec.dao.CategoryItem;
 import com.ec.dao.ProductDao;
 import com.ec.dto.ProductDto;
+import com.ec.dto.ProductGetDto;
 import com.ec.entity.CartEntity;
 import com.ec.entity.CategoryItemEntity;
 import com.ec.entity.Product1;
 import com.ec.service.product1.Product1ServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.io.IOException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/product1")
@@ -79,7 +82,7 @@ public class Product1Controller {
                 .body("Image and data uploaded successfully.");
     }
 
-    @GetMapping("/getall")
+    @GetMapping("/getallWithId")
     public ResponseEntity<List<Product1>> getAllProducts() {
         List<Product1> productList = product1ServiceImpl.getAllProducts();
 
@@ -103,9 +106,10 @@ public class Product1Controller {
 //            return ResponseEntity.badRequest().build();
 //        }
 //    }
-    @PostMapping("/addNewProduct")
+    @PostMapping(value ="/addNewProduct", consumes = { "multipart/form-data" })
+    @ApiOperation(value = "Upload a product with an image")
     public ResponseEntity<String> uploadImageAndData(
-            @RequestParam("image") MultipartFile file,
+            @RequestPart("image") MultipartFile file,
             @RequestParam("name") String name,
             @RequestParam("price") double price,
             @RequestParam("description") String description
@@ -165,6 +169,33 @@ public class Product1Controller {
         productDao.save(product);
 
         return ResponseEntity.status(HttpStatus.OK).body("Image and data uploaded successfully.");
+    }
+
+    @GetMapping("/getAllProduct")
+    public ResponseEntity<List<ProductGetDto>> getAllProductsNew() {
+        List<Product1> products = product1ServiceImpl.getAllProducts();
+
+        // Map List of Product1 entities to List of ProductDto objects
+        List<ProductGetDto> productDtos = mapProductsToDtoList(products);
+
+        return ResponseEntity.ok(productDtos);
+    }
+
+    // helper method map the Dto object
+    private List<ProductGetDto> mapProductsToDtoList(List<Product1> products) {
+        return products.stream().map(this::mapProductToDto).collect(Collectors.toList());
+    }
+
+    // Helper method to map Product1 entity to ProductDto
+    private ProductGetDto mapProductToDto(Product1 product) {
+        ProductGetDto productDto1 = new ProductGetDto();
+        productDto1.setName(product.getName());
+        productDto1.setDescription(product.getDescription());
+        productDto1.setPrice(product.getPrice());
+        productDto1.setImage(product.getImage());
+        productDto1.setCreatedAt(product.getCreatedAt());
+        productDto1.setUpdatedAt(product.getUpdatedAt());
+        return productDto1;
     }
 
 }
