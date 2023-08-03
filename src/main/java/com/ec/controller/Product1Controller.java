@@ -4,6 +4,9 @@ package com.ec.controller;
 import com.ec.dao.CartDao;
 import com.ec.dao.CategoryItem;
 import com.ec.dao.ProductDao;
+import com.ec.dto.ProductDto;
+import com.ec.entity.CartEntity;
+import com.ec.entity.CategoryItemEntity;
 import com.ec.entity.Product1;
 import com.ec.service.product1.Product1ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/product1")
@@ -125,5 +129,43 @@ public class Product1Controller {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Image and data uploaded successfully.");
     }
+
+    @PostMapping("/NewProduct")
+    public ResponseEntity<String> uploadImageAndData(@ModelAttribute ProductDto productRequestDTO) throws IOException {
+        if (productRequestDTO.getImage() == null || productRequestDTO.getImage().isEmpty()) {
+            return ResponseEntity.badRequest().body("Image file is required.");
+        }
+
+        byte[] imageData = productRequestDTO.getImage().getBytes();
+        Product1 product = new Product1();
+        product.setName(productRequestDTO.getName());
+        product.setImage(imageData);
+        product.setPrice(productRequestDTO.getPrice());
+        product.setDescription(productRequestDTO.getDescription());
+
+        // Optional: Set the cart and category based on their IDs
+        if (productRequestDTO.getCartId() != null) {
+            Optional<CartEntity> optionalCart = cartDao.findById(productRequestDTO.getCartId());
+            if (optionalCart.isPresent()) {
+                product.setCartEntity(optionalCart.get());
+            } else {
+                return ResponseEntity.badRequest().body("Invalid cartId.");
+            }
+        }
+
+        if (productRequestDTO.getCategoryId() != null) {
+            Optional<CategoryItemEntity> optionalCategory = categoryItem.findById(productRequestDTO.getCategoryId());
+            if (optionalCategory.isPresent()) {
+                product.setCategoryItemEntity(optionalCategory.get());
+            } else {
+                return ResponseEntity.badRequest().body("Invalid categoryId.");
+            }
+        }
+
+        productDao.save(product);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Image and data uploaded successfully.");
+    }
+
 }
 
