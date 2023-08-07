@@ -108,6 +108,11 @@ public class CartItemServiceImpl implements CartItemService {
                 .orElseThrow(() -> new NoSuchElementException("CartItem not found"));
     }
 
+    //get record by cart id
+    public List<CartItemEntity> getCartItemsByCartId(Long cartId) {
+        return cartItemDao.findByCartIdNative(cartId);
+    }
+
 
 
 }

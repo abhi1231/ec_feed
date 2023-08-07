@@ -73,5 +73,15 @@ public class CartItemController {
         }
     }
 
+    //get record by cart id
+    @GetMapping("/{cartId}/bycartid")
+    public ResponseEntity<List<CartItemEntity>> getCartItemsByCartId(@PathVariable Long cartId) {
+        List<CartItemEntity> cartItems = cartItemServiceImpl.getCartItemsByCartId(cartId);
+        if (cartItems.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(cartItems, HttpStatus.OK);
+    }
+
 
 }
