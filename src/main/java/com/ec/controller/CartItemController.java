@@ -1,7 +1,9 @@
 package com.ec.controller;
 
+import com.ec.dto.CartItemGetResponse;
 import com.ec.dto.CartItemRequestDTO;
 import com.ec.entity.CartItemEntity;
+import com.ec.entity.Product1;
 import com.ec.service.CartItem.CartItemService;
 import com.ec.service.CartItem.CartItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +85,29 @@ public class CartItemController {
         return new ResponseEntity<>(cartItems, HttpStatus.OK);
     }
 
+    @GetMapping("/GetItemByCartId/{cartId}")
+    public ResponseEntity<List<CartItemGetResponse>> getCartItemsByCartIdNew(@PathVariable Long cartId) {
+        List<CartItemEntity> cartItems = cartItemServiceImpl.getCartItemsByCartId(cartId);
+        if (cartItems.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<CartItemGetResponse> cartItemResponses = new ArrayList<>();
+        for (CartItemEntity cartItem : cartItems) {
+            CartItemGetResponse itemResponse = new CartItemGetResponse();
+            itemResponse.setCartItemId(cartItem.getCartItemId());
+            itemResponse.setQuantity(cartItem.getQuantity());
+
+            Product1 product = cartItem.getProduct();
+            itemResponse.setProductName(product.getName());
+            itemResponse.setProductDescription(product.getDescription());
+            itemResponse.setPrice(product.getPrice());
+            itemResponse.setImage(product.getImage());
+
+            cartItemResponses.add(itemResponse);
+        }
+
+        return new ResponseEntity<>(cartItemResponses, HttpStatus.OK);
+    }
 
 }
