@@ -106,7 +106,7 @@ public class Product1Controller {
 //            return ResponseEntity.badRequest().build();
 //        }
 //    }
-    @PostMapping(value ="/addNewProduct", consumes = { "multipart/form-data" })
+    @PostMapping(value = "/addNewProduct", consumes = {"multipart/form-data"})
     @ApiOperation(value = "Upload a product with an image")
     public ResponseEntity<String> uploadImageAndData(
             @RequestPart("image") MultipartFile file,
@@ -134,6 +134,7 @@ public class Product1Controller {
                 .body("Image and data uploaded successfully.");
     }
 
+    // All product feild insert
     @PostMapping("/NewProduct")
     public ResponseEntity<String> uploadImageAndData(@ModelAttribute ProductDto productRequestDTO) throws IOException {
         if (productRequestDTO.getImage() == null || productRequestDTO.getImage().isEmpty()) {
@@ -171,31 +172,28 @@ public class Product1Controller {
         return ResponseEntity.status(HttpStatus.OK).body("Image and data uploaded successfully.");
     }
 
+
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<ProductGetDto> getProductById(@PathVariable int productId) {
+        Product1 product = product1ServiceImpl.getProductByIdNew(productId);
+
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ProductGetDto productDto = product1ServiceImpl.mapProductToDto(product);
+
+        return ResponseEntity.ok(productDto);
+    }
+
     @GetMapping("/getAllProduct")
-    public ResponseEntity<List<ProductGetDto>> getAllProductsNew() {
+    public ResponseEntity<List<ProductGetDto>> getAllProductsNew1() {
         List<Product1> products = product1ServiceImpl.getAllProducts();
 
-        // Map List of Product1 entities to List of ProductDto objects
-        List<ProductGetDto> productDtos = mapProductsToDtoList(products);
+        // Map List of Product1 entities to List of ProductGetDto objects
+        List<ProductGetDto> productDtos = product1ServiceImpl.mapProductsToDtoList(products);
 
         return ResponseEntity.ok(productDtos);
-    }
-
-    // helper method map the Dto object
-    private List<ProductGetDto> mapProductsToDtoList(List<Product1> products) {
-        return products.stream().map(this::mapProductToDto).collect(Collectors.toList());
-    }
-
-    // Helper method to map Product1 entity to ProductDto
-    private ProductGetDto mapProductToDto(Product1 product) {
-        ProductGetDto productDto1 = new ProductGetDto();
-        productDto1.setName(product.getName());
-        productDto1.setDescription(product.getDescription());
-        productDto1.setPrice(product.getPrice());
-        productDto1.setImage(product.getImage());
-        productDto1.setCreatedAt(product.getCreatedAt());
-        productDto1.setUpdatedAt(product.getUpdatedAt());
-        return productDto1;
     }
 
 }

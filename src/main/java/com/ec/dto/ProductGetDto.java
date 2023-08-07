@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class ProductGetDto {
 
+
+    private int productId;
     private String name;
     private String description;
     private double price;
@@ -18,6 +20,14 @@ public class ProductGetDto {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 
     public String getName() {
         return name;

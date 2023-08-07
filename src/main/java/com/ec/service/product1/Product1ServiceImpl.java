@@ -3,6 +3,7 @@ package com.ec.service.product1;
 import com.ec.dao.CartDao;
 import com.ec.dao.CategoryItem;
 import com.ec.dao.ProductDao;
+import com.ec.dto.ProductGetDto;
 import com.ec.dto.ProductRequestDTO;
 import com.ec.entity.CartEntity;
 import com.ec.entity.CategoryItemEntity;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class Product1ServiceImpl implements Product1Service {
@@ -60,6 +62,7 @@ public class Product1ServiceImpl implements Product1Service {
         return productDao.findAll();
     }
 
+
     @Override
     public void deleteProduct(Product1 product) {
         productDao.delete(product);
@@ -96,6 +99,29 @@ public class Product1ServiceImpl implements Product1Service {
         }
 
         return productDao.save(product);
+    }
+
+
+    public Product1 getProductByIdNew(int productId) {
+        Optional<Product1> optionalProduct = productDao.findById(productId);
+        return optionalProduct.orElse(null);
+    }
+
+    public ProductGetDto mapProductToDto(Product1 product) {
+        ProductGetDto productDto = new ProductGetDto();
+        productDto.setProductId(product.getProductId());
+        productDto.setName(product.getName());
+        productDto.setDescription(product.getDescription());
+        productDto.setPrice(product.getPrice());
+        productDto.setImage(product.getImage());
+        productDto.setCreatedAt(product.getCreatedAt());
+        productDto.setUpdatedAt(product.getUpdatedAt());
+        return productDto;
+    }
+
+    // Helper method to map List of Product1 entities to List of ProductGetDto objects
+    public List<ProductGetDto> mapProductsToDtoList(List<Product1> products) {
+        return products.stream().map(this::mapProductToDto).collect(Collectors.toList());
     }
 
 
