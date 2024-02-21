@@ -29,7 +29,7 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItemEntity createCartItem(CartItemRequestDTO cartItemRequestDTO) {
         CartItemEntity cartItem = new CartItemEntity();
 
-        int quantity = cartItemRequestDTO.getQuantity();
+        Long quantity = cartItemRequestDTO.getQuantity();
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity. Quantity should be greater than zero.");
         }
@@ -39,7 +39,8 @@ public class CartItemServiceImpl implements CartItemService {
         if (cartId != null) {
             Optional<CartEntity> optionalCart = cartDao.findById(cartId);
             if (optionalCart.isPresent()) {
-                cartItem.setCart(optionalCart.get());
+                cartItem.setCartId(optionalCart.get().getCartId());
+
             } else {
                 throw new IllegalArgumentException("Invalid cartId");
             }
@@ -49,7 +50,7 @@ public class CartItemServiceImpl implements CartItemService {
         if (productId != -1) {
             Optional<Product1> optionalProduct = productDao.findById(productId);
             if (optionalProduct.isPresent()) {
-                cartItem.setProduct(optionalProduct.get());
+                cartItem.setProduct_id(optionalProduct.get());
             } else {
                 throw new IllegalArgumentException("Invalid productId");
             }
@@ -62,7 +63,7 @@ public class CartItemServiceImpl implements CartItemService {
         CartItemEntity existingCartItem = cartItemDao.findById(cartItemId)
                 .orElseThrow(() -> new NoSuchElementException("CartItem not found"));
 
-        int quantity = cartItemRequestDTO.getQuantity();
+        Long quantity = cartItemRequestDTO.getQuantity();
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity. Quantity should be greater than zero.");
         }
@@ -72,24 +73,24 @@ public class CartItemServiceImpl implements CartItemService {
         if (cartId != null) {
             Optional<CartEntity> optionalCart = cartDao.findById(cartId);
             if (optionalCart.isPresent()) {
-                existingCartItem.setCart(optionalCart.get());
+                existingCartItem.setCartId(optionalCart.get().getCartId());
             } else {
                 throw new IllegalArgumentException("Invalid cartId");
             }
         } else {
-            existingCartItem.setCart(null);
+            existingCartItem.setCartId(null);
         }
 
         int productId = cartItemRequestDTO.getProductId();
         if (productId != -1) {
             Optional<Product1> optionalProduct = productDao.findById(productId);
             if (optionalProduct.isPresent()) {
-                existingCartItem.setProduct(optionalProduct.get());
+                existingCartItem.setProduct_id(optionalProduct.get());
             } else {
                 throw new IllegalArgumentException("Invalid productId");
             }
         } else {
-            existingCartItem.setProduct(null);
+            existingCartItem.setProduct_id(null);
         }
 
         return cartItemDao.save(existingCartItem);

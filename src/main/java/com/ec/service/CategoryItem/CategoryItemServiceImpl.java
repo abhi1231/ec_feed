@@ -44,7 +44,7 @@ public class CategoryItemServiceImpl implements CategoryItemService{
         if (existingCategory != null) {
             existingCategory.setName(updatedCategory.getName());
             existingCategory.setDescription(updatedCategory.getDescription());
-            existingCategory.setProduct(updatedCategory.getProduct());
+            existingCategory.setCategory_id(updatedCategory.getCategory_id());
             return categoryItem.save(existingCategory);
         }
         return null;
@@ -64,7 +64,7 @@ public class CategoryItemServiceImpl implements CategoryItemService{
         if (productId != 0) {
             Optional<Product1> optionalProduct = productDao.findById(productId);
             if (optionalProduct.isPresent()) {
-                category.setProduct(optionalProduct.get());
+                category.setCategory_id(optionalProduct.get().getCategoryItemEntity().getCategory_id());
             } else {
                 throw new IllegalArgumentException("Invalid productId");
             }
@@ -84,12 +84,12 @@ public class CategoryItemServiceImpl implements CategoryItemService{
         if (productId != 0) {
             Optional<Product1> optionalProduct = productDao.findById(productId);
             if (optionalProduct.isPresent()) {
-                existingCategory.setProduct(optionalProduct.get());
+                existingCategory.setCategory_id(optionalProduct.get().getCategoryItemEntity().getCategory_id());
             } else {
                 throw new IllegalArgumentException("Invalid productId");
             }
         } else {
-            existingCategory.setProduct(null);
+            existingCategory.setCategory_id(null);
         }
 
         return categoryItem.save(existingCategory);

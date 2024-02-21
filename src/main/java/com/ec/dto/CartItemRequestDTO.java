@@ -3,7 +3,7 @@ package com.ec.dto;
 public class CartItemRequestDTO {
     private Long cartId;
     private int productId;
-    private int quantity;
+    private Long quantity;
 
     public Long getCartId() {
         return cartId;
@@ -21,11 +21,11 @@ public class CartItemRequestDTO {
         this.productId = productId;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 }

@@ -10,43 +10,41 @@ public class CartItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
-    private Long cart_id;
-
-    private String product_id;
-    private String quantity;
-    private String price;
+    private Long cartId;
 
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product1 product_id;
 
-    public Long getCart_id() {
-        return cart_id;
+
+
+    private Long quantity;
+    private double price;
+
+    public Long getCartId() {
+        return cartId;
     }
 
-    public void setCart_id(Long cart_id) {
-        this.cart_id = cart_id;
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
     }
 
-    public String getProduct_id() {
-        return product_id;
-    }
 
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
-    }
 
-    public String getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

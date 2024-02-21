@@ -95,10 +95,10 @@ public class CartItemController {
         List<CartItemGetResponse> cartItemResponses = new ArrayList<>();
         for (CartItemEntity cartItem : cartItems) {
             CartItemGetResponse itemResponse = new CartItemGetResponse();
-            itemResponse.setCartItemId(cartItem.getCartItemId());
+            itemResponse.setCartItemId(cartItem.getCartId());
             itemResponse.setQuantity(cartItem.getQuantity());
 
-            Product1 product = cartItem.getProduct();
+            Product1 product = cartItem.getProduct_id();
             itemResponse.setProductName(product.getName());
             itemResponse.setProductDescription(product.getDescription());
             itemResponse.setPrice(product.getPrice());

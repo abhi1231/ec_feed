@@ -7,7 +7,7 @@ public class CartItemGetResponse {
     private String productDescription;
     private double price;
     private byte[] image;
-    private int quantity;
+    private Long quantity;
 
     public Long getCartItemId() {
         return cartItemId;
@@ -49,11 +49,11 @@ public class CartItemGetResponse {
         this.image = image;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 }
