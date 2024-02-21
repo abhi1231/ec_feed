@@ -1,18 +1,11 @@
 package com.ec.controller;
 
-import com.ec.dao.CustomerDao;
+
 import com.ec.entity.Customer;
-import com.ec.entity.Prize;
 import com.ec.service.CustomerServiceImpln;
-import com.ec.service.prize.PrizeImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -24,23 +17,31 @@ public class CustomerController {
     @Autowired
     CustomerServiceImpln customerServiceImpln;
 
-    @Autowired
-    PrizeImpl prize;
-
-    @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers(){
-
-        List<Customer> data = customerServiceImpln.queryCustomer();
-
-        return ResponseEntity.ok(data);
+    @GetMapping("/getAll")
+    public List<Customer> getAllCustomers() {
+        return customerServiceImpln.getAllCustomers();
     }
 
-    @GetMapping("/prize")
-    public ResponseEntity<List<Prize>> getPrize(){
-
-        List<Prize> data = prize.getPrize();
-
-        return ResponseEntity.ok(data);
+    @GetMapping("/{id}")
+    public Customer getCustomerById(@PathVariable Long id) {
+        return customerServiceImpln.getCustomerById(id);
     }
+
+    @PostMapping
+    public Customer createCustomer(@RequestBody Customer customer) {
+        return customerServiceImpln.createCustomer(customer);
+    }
+
+    @PutMapping("/{id}")
+    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updatedCustomer) {
+        return customerServiceImpln.updateCustomer(id, updatedCustomer);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCustomer(@PathVariable Long id) {
+        customerServiceImpln.deleteCustomer(id);
+    }
+
+
 
 }

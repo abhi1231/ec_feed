@@ -1,4 +1,4 @@
-package com.ec.service.Cart;
+package com.ec.service.cart;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

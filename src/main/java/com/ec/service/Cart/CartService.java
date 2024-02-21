@@ -1,4 +1,4 @@
-package com.ec.service.Cart;
+package com.ec.service.cart;
 
 import com.ec.entity.CartEntity;
 
@@ -9,13 +9,5 @@ public interface CartService {
 
 
 
-    List<CartEntity> getAllCarts();
 
-    public Optional<CartEntity> getCartById(Long cartId);
-
-    public CartEntity createCart(CartEntity cartEntity);
-
-    public CartEntity updateCart(Long cartId, CartEntity cartEntity);
-
-    public void deleteCart(Long cartId);
 }

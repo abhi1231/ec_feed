@@ -1,19 +1,34 @@
 package com.ec.service.product1;
 
+import com.ec.dao.CartDao;
+import com.ec.dao.CategoryItem;
 import com.ec.dao.ProductDao;
+import com.ec.dto.ProductGetDto;
+import com.ec.dto.ProductRequestDTO;
+import com.ec.entity.CartEntity;
+import com.ec.entity.CategoryItemEntity;
 import com.ec.entity.Product1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class Product1ServiceImpl implements Product1Service {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private CategoryItem categoryItem;
+
+    @Autowired
+    private CartDao cartDao;
 
     @Override
     public Product1 addProduct(Product1 product1) {
@@ -47,8 +62,67 @@ public class Product1ServiceImpl implements Product1Service {
         return productDao.findAll();
     }
 
+
     @Override
     public void deleteProduct(Product1 product) {
         productDao.delete(product);
     }
+    //  New add
+
+    public Product1 createProduct(ProductRequestDTO productRequestDTO) {
+        Product1 product = new Product1();
+        product.setName(productRequestDTO.getName());
+        product.setDescription(productRequestDTO.getDescription());
+        product.setPrice(productRequestDTO.getPrice());
+        product.setImage(productRequestDTO.getImage());
+      //  product.setCreatedAt(LocalDateTime.now());
+       // product.setUpdatedAt(LocalDateTime.now());
+
+        Long categoryId = productRequestDTO.getCategoryId();
+        if (categoryId != null) {
+            Optional<CategoryItemEntity> optionalCategory = categoryItem.findById(categoryId);
+            if (optionalCategory.isPresent()) {
+                product.setCategoryItemEntity(optionalCategory.get());
+            } else {
+                throw new IllegalArgumentException("Invalid categoryId");
+            }
+        }
+
+        Long cartId = productRequestDTO.getCartId();
+        if (cartId != null) {
+            Optional<CartEntity> optionalCart = cartDao.findById(cartId);
+            if (optionalCart.isPresent()) {
+                product.setCartEntity(optionalCart.get());
+            } else {
+                throw new IllegalArgumentException("Invalid cartId");
+            }
+        }
+
+        return productDao.save(product);
+    }
+
+
+    public Product1 getProductByIdNew(int productId) {
+        Optional<Product1> optionalProduct = productDao.findById(productId);
+        return optionalProduct.orElse(null);
+    }
+
+    public ProductGetDto mapProductToDto(Product1 product) {
+        ProductGetDto productDto = new ProductGetDto();
+        productDto.setProductId(product.getProductId());
+        productDto.setName(product.getName());
+        productDto.setDescription(product.getDescription());
+        productDto.setPrice(product.getPrice());
+        productDto.setImage(product.getImage());
+        productDto.setCreatedAt(product.getCreatedAt());
+        productDto.setUpdatedAt(product.getUpdatedAt());
+        return productDto;
+    }
+
+    // Helper method to map List of Product1 entities to List of ProductGetDto objects
+    public List<ProductGetDto> mapProductsToDtoList(List<Product1> products) {
+        return products.stream().map(this::mapProductToDto).collect(Collectors.toList());
+    }
+
+
 }

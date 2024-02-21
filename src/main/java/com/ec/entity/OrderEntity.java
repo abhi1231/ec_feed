@@ -1,6 +1,9 @@
 package com.ec.entity;
 
+import com.ec.dto.OrderStatus;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "orders")
@@ -8,52 +11,60 @@ public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int order_item_id;
-    private int product_id;
+    @Column(name = "order_id")
+    private Long orderId;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    private int order_id;
-    private int quantity;
+    @Column(name = "order_date")
+    private LocalDate orderDate;
 
-    private double price;
+    @Column(name = "total_amount")
+    private double totalAmount;
 
-    public int getOrder_item_id() {
-        return order_item_id;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_item_id(int order_item_id) {
-        this.order_item_id = order_item_id;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public LocalDate getOrderDate() {
+        return orderDate;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
-    public double getPrice() {
-        return price;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }
+

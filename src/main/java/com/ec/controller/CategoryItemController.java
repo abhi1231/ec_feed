@@ -1,50 +1,71 @@
 package com.ec.controller;
 
+import com.ec.dto.CategoryRequestDTO;
 import com.ec.entity.CartEntity;
 import com.ec.entity.CategoryItemEntity;
 import com.ec.entity.Customer;
 import com.ec.service.CategoryItem.CategoryItemService;
 import com.ec.service.CategoryItem.CategoryItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 public class CategoryItemController {
 
     @Autowired
     private CategoryItemServiceImpl categoryItemServiceImpl;
 
-    @GetMapping
+    @GetMapping("/getAll")
     public List<CategoryItemEntity> getAllCategories() {
         return categoryItemServiceImpl.getAllCategories();
     }
 
-
-
-    @GetMapping("/{categoryId}")
-    public Optional<CategoryItemEntity> getAllCarts(@PathVariable("categoryId") String category_id) {
-        return categoryItemServiceImpl.getCategoryById(category_id);
+    @GetMapping("/{id}")
+    public CategoryItemEntity getCategoryById(@PathVariable Long id) {
+        return categoryItemServiceImpl.getCategoryById(id);
     }
+
+
     @PostMapping
-    public CategoryItemEntity createCategory(@RequestBody CategoryItemEntity category) {
-
-        return categoryItemServiceImpl.createCategory(category) ;
+    public ResponseEntity<CategoryItemEntity> createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
+        try {
+            CategoryItemEntity savedCategory = categoryItemServiceImpl.createCategory(categoryRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
+
 
     @PutMapping("/{categoryId}")
-    public CategoryItemEntity updateCategory(@PathVariable("categoryId") String categoryId, @RequestBody CategoryItemEntity category) {
-
-        return categoryItemServiceImpl.updateCategory(categoryId, category);
+    public ResponseEntity<CategoryItemEntity> updateCategory(
+            @PathVariable Long categoryId,
+            @RequestBody CategoryRequestDTO categoryRequestDTO
+    ) {
+        try {
+            CategoryItemEntity updatedCategory = categoryItemServiceImpl.updateCategory(categoryId, categoryRequestDTO);
+            return ResponseEntity.ok(updatedCategory);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @DeleteMapping("/{categoryId}")
-    public void deleteCategory(@PathVariable("categoryId") String categoryId) {
-        categoryItemServiceImpl.deleteCategory(categoryId);
+
+
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable Long id) {
+        categoryItemServiceImpl.deleteCategory(id);
     }
+
+
 }

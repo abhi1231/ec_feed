@@ -1,54 +1,32 @@
-package com.ec.entity;
+package com.ec.dto;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "product")
-public class ProductEntity {
+public class ProductGetDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Long productId;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private CategoryItemEntity category;
-
+    private int productId;
     private String name;
     private String description;
     private double price;
-
-    @Lob
-    @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    // Constructors, getters, and setters
-    // ...
-
-    public Long getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
-    }
-
-    public CategoryItemEntity getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryItemEntity category) {
-        this.category = category;
     }
 
     public String getName() {
@@ -83,8 +61,6 @@ public class ProductEntity {
         this.image = image;
     }
 
-
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -100,6 +76,7 @@ public class ProductEntity {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();
@@ -111,6 +88,4 @@ public class ProductEntity {
         this.updatedAt = new Date();
     }
 
-    public ProductEntity() {
-    }
 }

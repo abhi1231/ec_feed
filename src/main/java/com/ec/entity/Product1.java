@@ -21,8 +21,13 @@ public class Product1 {
     @Column(name = "product_id")
     private int productId;
 
-    @Column(name = "category_id")
-    private int categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryItemEntity categoryItemEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private CartEntity cartEntity;
 
     @Column(name = "name")
     private String name;
@@ -31,7 +36,7 @@ public class Product1 {
     private String description;
 
     @Column(name = "price")
-    private String price;
+    private double price;
 
     @Lob
     @Column(name = "image")
@@ -53,12 +58,20 @@ public class Product1 {
         this.productId = productId;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public CategoryItemEntity getCategoryItemEntity() {
+        return categoryItemEntity;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryItemEntity(CategoryItemEntity categoryItemEntity) {
+        this.categoryItemEntity = categoryItemEntity;
+    }
+
+    public CartEntity getCartEntity() {
+        return cartEntity;
+    }
+
+    public void setCartEntity(CartEntity cartEntity) {
+        this.cartEntity = cartEntity;
     }
 
     public String getName() {
@@ -77,11 +90,11 @@ public class Product1 {
         this.description = description;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

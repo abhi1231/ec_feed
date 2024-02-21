@@ -4,13 +4,11 @@ import com.ec.entity.Customer;
 
 import java.util.List;
 
+
 public interface CustomerService {
 
-        List<Customer> queryCustomer();
-
-    List<Customer> queryCustomerByName(String firstName);
-
-    int insertCustomer(Customer customer);
-
-    int queryCountCustomer();
+    public List<Customer> getAllCustomers();
+    public Customer getCustomerById(Long id);
+    public Customer updateCustomer(Long id, Customer updatedCustomer);
+    public void deleteCustomer(Long id);
 }

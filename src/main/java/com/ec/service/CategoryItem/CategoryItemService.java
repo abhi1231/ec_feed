@@ -7,13 +7,9 @@ import java.util.Optional;
 
 public interface CategoryItemService {
 
-    List<CategoryItemEntity> getAllCategories();
-
-    Optional<CategoryItemEntity> getCategoryById(String categoryId);
-
-    CategoryItemEntity createCategory(CategoryItemEntity category);
-
-    CategoryItemEntity updateCategory(String categoryId, CategoryItemEntity category);
-
-    void deleteCategory(String categoryId);
+    public List<CategoryItemEntity> getAllCategories();
+    public CategoryItemEntity getCategoryById(Long id);
+    public CategoryItemEntity createCategory(CategoryItemEntity category);
+    public CategoryItemEntity updateCategory(Long id, CategoryItemEntity updatedCategory);
+    public void deleteCategory(Long id);
 }
