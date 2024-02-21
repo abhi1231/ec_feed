@@ -9,27 +9,20 @@ public class CartItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_item_id")
-    private String cart_item_id;
+    @Column(name = "cart_id")
+    private Long cart_id;
 
-    private String cart_id;
     private String product_id;
     private String quantity;
     private String price;
 
-    public String getCart_item_id() {
-        return cart_item_id;
-    }
 
-    public void setCart_item_id(String cart_item_id) {
-        this.cart_item_id = cart_item_id;
-    }
 
-    public String getCart_id() {
+    public Long getCart_id() {
         return cart_id;
     }
 
-    public void setCart_id(String cart_id) {
+    public void setCart_id(Long cart_id) {
         this.cart_id = cart_id;
     }
 
