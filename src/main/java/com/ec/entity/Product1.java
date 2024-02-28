@@ -58,13 +58,13 @@ public class Product1 {
         this.productId = productId;
     }
 
-    public CategoryItemEntity getCategoryItemEntity() {
-        return categoryItemEntity;
-    }
-
-    public void setCategoryItemEntity(CategoryItemEntity categoryItemEntity) {
-        this.categoryItemEntity = categoryItemEntity;
-    }
+//    public CategoryItemEntity getCategoryItemEntity() {
+//        return categoryItemEntity;
+//    }
+//
+//    public void setCategoryItemEntity(CategoryItemEntity categoryItemEntity) {
+//        this.categoryItemEntity = categoryItemEntity;
+//    }
 
     public CartEntity getCartEntity() {
         return cartEntity;
